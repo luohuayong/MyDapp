@@ -21,29 +21,30 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" >
         <div class="jumbotron">
             <h1>区块链小游戏</h1>
             <div class="row">
                 <div class="col-xs-4">
-                    <div class="panel panel-default">
+                    <div class="panel panel-default" id="game1">
                         <div class="panel-heading">
                             幸运数字
                         </div>
                         <div class="panel-body">
                             <div class="form-group">
-                                    查看你的幸运数或者设置一个新的幸运数。
+                                查看你的幸运数或者设置一个新的幸运数。
                             </div>
                             <div class="form-group input-group">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button">查看</button>
+                                    <button class="btn btn-default" type="button" @click="btnGetClick" id="btnGet">查看</button>
                                 </span>
-                                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+                                <input type="text" class="form-control" v-model="nowLuckDigit">
+                                
                             </div>
                             <div class="form-group input-group">
-                                <input type="text" class="form-control" placeholder="输入一个10位以内的数">
+                                <input type="text" class="form-control" placeholder="输入一个10位以内的数" v-model="newLuckDigit">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button">设置</button>
+                                    <button class="btn btn-default" type="button" @click="btnSetClick" id="btnSet">设置</button>
                                 </span>
                             </div>
                         </div>
@@ -63,6 +64,58 @@
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
+
+    <script src="js/vue.js"></script>
+    <script src="./js/web3.min.js"></script>
+    <script src="./js/app.js"></script>
+
+    <script>
+        $(document).ready(function(){
+             // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+             if (typeof web3 !== 'undefined') {
+                // Use Mist/MetaMask's provider
+                web3js = new Web3(web3.currentProvider);
+            } else {
+                console.log('No web3? You should consider trying MetaMask!')
+                // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+                web3js = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+            }
+
+            // 使用本地节点
+            // web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+            // Now you can start your app & access web3 freely:
+            startApp()           
+        });
+
+
+        // window.addEventListener('load', function () {
+
+        //     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+        //     if (typeof web3 !== 'undefined') {
+        //         // Use Mist/MetaMask's provider
+        //         web3js = new Web3(web3.currentProvider);
+        //     } else {
+        //         console.log('No web3? You should consider trying MetaMask!')
+        //         // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+        //         web3js = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+        //     }
+
+        //     // Now you can start your app & access web3 freely:
+        //     startApp()
+
+        // })
+
+        function startApp() {
+            checkNewwork();
+            initWeb3();
+            initVue();
+
+
+
+        }
+
+
+    </script>
 </body>
 
 </html>

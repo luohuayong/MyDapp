@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>DRC20代币合约</title>
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="jumbotron">
+            <div class="row" style="padding-top:40px;">
+                <div class="col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="h3 text-center">DRC20代币合约</div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="">名称(name)：</label>
+                                <span id="name"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="">标识符(symbol)：</label>
+                                <span id="symbol"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="">总额(totalSupply)：</label>
+                                <span id="totalSupply"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="">当前帐户(account)：</label>
+                                <span id="account"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="">余额(balanceOf)：</label>
+                                <span id="balanceOf"></span>
+                                <button id="btnCandy">糖果</button>
+                            </div>
+                            <div class="form-group">
+                                <label for="">从当前账户转移(transfer)：</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">地址</span>
+                                    <input class="form-control" id="toAccount">
+                                </div>
+                                <div class="input-group" style="padding-top:10px;">
+                                    <span class="input-group-addon">金额</span>
+                                    <input type="text" class="form-control" id="toValue">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-block" id="btnTransfer">提交</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
+    <script src="./js/web3.min.js"></script>
+
+    <script>
+        var web3;
+        var erc20;
+        $(document).ready(function () {
+            // 使用metamask访问节点
+            if (typeof web3 !== 'undefined') {
+                console.log('Finded MetaMask')
+                web3js = new Web3(web3.currentProvider);
+            } else {
+                console.log('Not MetaMask')
+                web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+            }
+            
+            // 使用本地节点
+            // web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+
+            
+
+            var account = web3.eth.accounts[0];
+            web3.eth.defaultAccount = web3.eth.accounts[0];
+            var accountInterval = setInterval(function() {
+            if (web3.eth.accounts[0] !== account) {
+                account = web3.eth.accounts[0];
+                web3.eth.defaultAccount = web3.eth.accounts[0];                
+                updateInterface();
+            }
+            }, 100);
+            
+            startApp()
+        });
+
+        function updateInterface() {
+
+            erc20.name(function (error, result) {
+                if (!error)
+                    $("#name").text(result);
+                else
+                    console.log(error);
+            });
+
+            erc20.symbol(function (error, result) {
+                if (!error)
+                    $("#symbol").text(result);
+                else
+                    console.log(error);
+            });
+
+            erc20.totalSupply(function (error, result) {
+                if (!error)
+                    $("#totalSupply").text(result);
+                else
+                    console.log(error);
+            });
+
+            $("#account").text(web3.eth.coinbase);
+
+            erc20.balanceOf(web3.eth.defaultAccount, function (error, result) {
+                if (!error)
+                    $("#balanceOf").text(result);
+                else
+                    console.log(error);
+            });
+        }
+
+        function startApp() {
+            var abi = [
+                {
+                    "constant": true,
+                    "inputs": [],
+                    "name": "totalSupply",
+                    "outputs": [
+                        {
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ],
+                    "payable": false,
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "constant": true,
+                    "inputs": [],
+                    "name": "symbol",
+                    "outputs": [
+                        {
+                            "name": "",
+                            "type": "string"
+                        }
+                    ],
+                    "payable": false,
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "constant": true,
+                    "inputs": [],
+                    "name": "name",
+                    "outputs": [
+                        {
+                            "name": "",
+                            "type": "string"
+                        }
+                    ],
+                    "payable": false,
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "constant": true,
+                    "inputs": [
+                        {
+                            "name": "_owner",
+                            "type": "address"
+                        },
+                        {
+                            "name": "_spender",
+                            "type": "address"
+                        }
+                    ],
+                    "name": "allowance",
+                    "outputs": [
+                        {
+                            "name": "remaining",
+                            "type": "uint256"
+                        }
+                    ],
+                    "payable": false,
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "constant": true,
+                    "inputs": [],
+                    "name": "decimals",
+                    "outputs": [
+                        {
+                            "name": "",
+                            "type": "uint8"
+                        }
+                    ],
+                    "payable": false,
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "constant": true,
+                    "inputs": [
+                        {
+                            "name": "_owner",
+                            "type": "address"
+                        }
+                    ],
+                    "name": "balanceOf",
+                    "outputs": [
+                        {
+                            "name": "balance",
+                            "type": "uint256"
+                        }
+                    ],
+                    "payable": false,
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "constant": false,
+                    "inputs": [],
+                    "name": "candy",
+                    "outputs": [
+                        {
+                            "name": "success",
+                            "type": "bool"
+                        }
+                    ],
+                    "payable": false,
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "anonymous": false,
+                    "inputs": [
+                        {
+                            "indexed": true,
+                            "name": "_owner",
+                            "type": "address"
+                        },
+                        {
+                            "indexed": true,
+                            "name": "_spender",
+                            "type": "address"
+                        },
+                        {
+                            "indexed": false,
+                            "name": "_value",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "Approval",
+                    "type": "event"
+                },
+                {
+                    "constant": false,
+                    "inputs": [
+                        {
+                            "name": "_from",
+                            "type": "address"
+                        },
+                        {
+                            "name": "_to",
+                            "type": "address"
+                        },
+                        {
+                            "name": "_value",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "transferFrom",
+                    "outputs": [
+                        {
+                            "name": "success",
+                            "type": "bool"
+                        }
+                    ],
+                    "payable": false,
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "anonymous": false,
+                    "inputs": [
+                        {
+                            "indexed": true,
+                            "name": "_owner",
+                            "type": "address"
+                        }
+                    ],
+                    "name": "Candy",
+                    "type": "event"
+                },
+                {
+                    "anonymous": false,
+                    "inputs": [
+                        {
+                            "indexed": true,
+                            "name": "_from",
+                            "type": "address"
+                        },
+                        {
+                            "indexed": true,
+                            "name": "_to",
+                            "type": "address"
+                        },
+                        {
+                            "indexed": false,
+                            "name": "_value",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "Transfer",
+                    "type": "event"
+                },
+                {
+                    "inputs": [],
+                    "payable": false,
+                    "stateMutability": "nonpayable",
+                    "type": "constructor"
+                },
+                {
+                    "constant": false,
+                    "inputs": [
+                        {
+                            "name": "_spender",
+                            "type": "address"
+                        },
+                        {
+                            "name": "_value",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "approve",
+                    "outputs": [
+                        {
+                            "name": "success",
+                            "type": "bool"
+                        }
+                    ],
+                    "payable": false,
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "constant": false,
+                    "inputs": [
+                        {
+                            "name": "_to",
+                            "type": "address"
+                        },
+                        {
+                            "name": "_value",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "transfer",
+                    "outputs": [
+                        {
+                            "name": "success",
+                            "type": "bool"
+                        }
+                    ],
+                    "payable": false,
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                }
+            ];
+
+            // Rinkeby合约地址
+            var address = "0xcfc644983c34a2c447641030f699f648d461df4c";
+            // 本地合约地址
+            // var address = "0xdda6327139485221633a1fcd65f4ac932e60a2e1";
+            erc20 = web3.eth.contract(abi).at(address);
+
+            $("#btnTransfer").click(function () {
+                var toAccount = $("#toAccount").val();
+                var toValue = $("#toValue").val();
+                erc20.transfer( toAccount, toValue, function () {
+                    updateInterface();
+                });
+            });
+
+            $("#btnCandy").click(function () {
+                var toAccount = $("#toAccount").val();
+                var toValue = $("#toValue").val();
+                erc20.candy(function () {
+                    updateInterface();
+                });
+            });   
+            
+            if(web3.eth.defaultAccount) {
+                updateInterface();
+            }           
+        }
+
+
+    </script>
+</body>
+
+</html>
