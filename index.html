@@ -5,113 +5,261 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-    <title>Bootstrap 101 Template</title>
 
-    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <title>店铺点评</title>
+
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
         crossorigin="anonymous">
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
 </head>
 
 <body>
-    <div class="container" >
+
+    <div class="container">
+
         <div class="jumbotron">
-            <h1>区块链小游戏</h1>
-            <div class="row">
-                <div class="col-xs-4">
-                    <div class="panel panel-default" id="game1">
+            
+            <div class="panel panel-default">
+                    <div class="panel-heading">
+                            <div class="h4 text-center">说明</div>
+                        </div>               
+                <div class="panel-body">
+                   <ul>
+                       <li>本程序是基于以太坊智能合约的Dapp</li>
+                       <li>需要安装chrome浏览器</li>
+                       <li>安装metamask,并创建帐号</li>
+                       <li>在metamask中选择Rinkeby Test Net(以太坊测试网络)</li>
+                       <li>申请一些以太坊测试币</li>
+                       <li>可以对店铺进行评论，以及对评论点赞</li>
+                       <li>评论不需要消耗代币，而每次点赞要消耗10个代币</li>
+                       <li>通过挖矿可以获取代币，每次获取100个代币</li>
+                       <li>评论信息和点赞数据都记录入以太坊链上</li>
+                       <li>每次操作都需要消耗一定量的测试以太币，包括挖矿、评论、点赞</li>
+                       <li>每次操作完后，都等待链上确认后才会生效，这是数据写入区块链的过程</li>
+                   </ul>
+                </div>
+            </div>
+            
+
+            <div class="row center-block">
+                <div class="col-xs-12">
+                    <div class="panel panel-default">
                         <div class="panel-heading">
-                            幸运数字
+                            <div class="h4 text-center">账户信息</div>
                         </div>
                         <div class="panel-body">
                             <div class="form-group">
-                                查看你的幸运数或者设置一个新的幸运数。
+                                <label for="">当前帐户(account)：</label>
+                                <span id="account"></span>
                             </div>
-                            <div class="form-group input-group">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button" @click="btnGetClick" id="btnGet">查看</button>
-                                </span>
-                                <input type="text" class="form-control" v-model="nowLuckDigit">
-                                
+                            <div class="form-group">
+                                <label for="">余额(balanceOf)：</label>
+                                <span id="balanceOf"></span>
                             </div>
-                            <div class="form-group input-group">
-                                <input type="text" class="form-control" placeholder="输入一个10位以内的数" v-model="newLuckDigit">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button" @click="btnSetClick" id="btnSet">设置</button>
-                                </span>
-                            </div>
+                            <button class="btn btn-primary btn-block" id="btnMining">挖矿</button>
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-4">
+
+
+                <div class="col-xs-3 ">
+                    <img src="./images/1.png" class="img-responsive center-block" alt="Image">
                 </div>
-                <div class="col-xs-4">
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+
+                </div>
+                <div class="col-xs-9">
+                    <div class="form-group">
+                        <textarea name="" id="areaComment" class="form-control" rows="6" placeholder="填写评论"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary form-control" id="btnSubmit">提交</button>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="row center-block" style="padding-top:20px;">
+                <div class="col-xs-12">
+                    <ul class="list-group" id="ulComment">
+                        <li class="list-group-item" id="liComment1">
+                            <button type="button" class="btn btn-default" id="btnLike1" onclick="btnLikeClick(1);">
+                                <span class="glyphicon glyphicon-heart-empty"></span>5
+                            </button>
+                            Cras justo odio
+                        </li>
+                        <li class="list-group-item">
+                            <button type="button" class="btn btn-default">
+                                <span class="glyphicon glyphicon-heart-empty"></span>
+                                <span id="spLikeNumber1">4</span>
+                            </button>
+                            Cras justo odio
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
+
+
     </div>
 
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-        crossorigin="anonymous"></script>
 
-    <script src="js/vue.js"></script>
     <script src="./js/web3.min.js"></script>
-    <script src="./js/app.js"></script>
 
     <script>
-        $(document).ready(function(){
-             // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-             if (typeof web3 !== 'undefined') {
-                // Use Mist/MetaMask's provider
-                web3js = new Web3(web3.currentProvider);
+        var web3;
+        var commentIns;
+        var shopId = 1;
+        $(document).ready(function () {
+            // 使用metamask访问节点
+            if (typeof web3 !== 'undefined') {
+                console.log('Finded web3')
+                web3 = new Web3(web3.currentProvider);
             } else {
-                console.log('No web3? You should consider trying MetaMask!')
-                // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-                web3js = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+                console.log('new web3')
+                web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
             }
 
             // 使用本地节点
             // web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-            // Now you can start your app & access web3 freely:
-            startApp()           
+
+
+
+            // var account = web3.eth.accounts[0];
+            web3.eth.defaultAccount = web3.eth.accounts[0];
+            // var accountInterval = setInterval(function () {
+            //     if (web3.eth.accounts[0] !== account) {
+            //         account = web3.eth.accounts[0];
+            //         web3.eth.defaultAccount = web3.eth.accounts[0];
+            //         updateAccountInfo();
+            //     }
+            // }, 100);
+
+            startApp()
+
+            if (web3.eth.defaultAccount) {
+                updateAccountInfo();
+            }
         });
 
-
-        // window.addEventListener('load', function () {
-
-        //     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-        //     if (typeof web3 !== 'undefined') {
-        //         // Use Mist/MetaMask's provider
-        //         web3js = new Web3(web3.currentProvider);
-        //     } else {
-        //         console.log('No web3? You should consider trying MetaMask!')
-        //         // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-        //         web3js = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-        //     }
-
-        //     // Now you can start your app & access web3 freely:
-        //     startApp()
-
-        // })
-
         function startApp() {
-            checkNewwork();
-            initWeb3();
-            initVue();
+            var abi = [{ "constant": true, "inputs": [{ "name": "", "type": "uint256" }], "name": "_likes", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "", "type": "address" }], "name": "_balances", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "", "type": "uint256" }], "name": "_comments", "outputs": [{ "name": "", "type": "string" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "_shopId", "type": "uint256" }], "name": "getCommentsForShop", "outputs": [{ "name": "ids", "type": "uint256[]" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "owner", "outputs": [{ "name": "", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "", "type": "uint256" }], "name": "_shops", "outputs": [{ "name": "", "type": "string" }], "payable": false, "stateMutability": "view", "type": "function" }, { "anonymous": false, "inputs": [{ "indexed": false, "name": "_owner", "type": "address" }, { "indexed": false, "name": "newBlanace", "type": "uint256" }], "name": "BalanceChanged", "type": "event" }, { "constant": false, "inputs": [{ "name": "newOwner", "type": "address" }], "name": "transferOwnership", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "anonymous": false, "inputs": [{ "indexed": false, "name": "_commentId", "type": "uint256" }, { "indexed": false, "name": "_shopId", "type": "uint256" }, { "indexed": false, "name": "_content", "type": "string" }], "name": "CommentAdded", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": false, "name": "_commentId", "type": "uint256" }, { "indexed": false, "name": "newLikeNumber", "type": "uint256" }], "name": "Like", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "name": "previousOwner", "type": "address" }, { "indexed": true, "name": "newOwner", "type": "address" }], "name": "OwnershipTransferred", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": false, "name": "_id", "type": "uint256" }, { "indexed": false, "name": "_name", "type": "string" }], "name": "ShopCreated", "type": "event" }, { "constant": false, "inputs": [], "name": "mining", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [{ "name": "_commentId", "type": "uint256" }], "name": "like", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [{ "name": "_name", "type": "string" }], "name": "addShop", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [{ "name": "_shopId", "type": "uint256" }, { "name": "_content", "type": "string" }], "name": "addComment", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }];
 
+            // Rinkeby合约地址
+            var address = "0x588efb9c62d7ecff3db8676f861e078eebdb95ec";
+            // 本地合约地址
+            // var address = "0x5034f49b27353cedc562b49ea91c7438ea351d36";
+            commentIns = web3.eth.contract(abi).at(address);
 
+            $("#btnMining").click(function () {
+                commentIns.mining(function (error, result) {
+                    if (!error)
+                        console.log(result);
+                    else
+                        console.log(error);
+                });
+            });
 
+            $("#btnSubmit").click(function () {
+                var _content = $("#areaComment").val();
+                commentIns.addComment(shopId, _content, function (error, result) {
+                    if (!error)
+                        console.log(result);
+                    else
+                        console.log(error);
+                });
+            });
+
+            let events = commentIns.allEvents(function (err, result) {
+                if (!err) {
+                    switch (result.event) {
+                        case "BalanceChanged":
+                            updateAccountInfo();
+                            break;
+                        case "CommentAdded":
+                            updateComment();
+                            break;
+                        case "Like":
+                            let _commentId = result.args._commentId;
+                            let _newNumber = result.args.newLikeNumber;
+                            updateLike(_commentId, _newNumber);
+                            break;
+                    }
+
+                } else {
+                    console.log(err);
+                }
+            });
+
+            updateComment();
+        }
+
+        function btnLikeClick(_commentId) {
+            commentIns.like(_commentId, function (error, result) {
+                if (!error)
+                    console.log(result);
+                else
+                    console.log(error);
+            });
+        }
+
+        function updateAccountInfo() {
+            $("#account").text(web3.eth.defaultAccount);
+
+            commentIns._balances(web3.eth.defaultAccount, function (error, result) {
+                if (!error)
+                    $("#balanceOf").text(result);
+                else
+                    console.log(error);
+            });
+        }
+
+        function updateComment() {
+            commentIns.getCommentsForShop(shopId, function (error, result) {
+                if (!error) {
+                    $("#ulComment").empty();
+                    for (let i = 0; i < result.length; i++) {
+                        let _commentId = parseInt(result[i]);
+                        commentIns._comments(_commentId, function (error, result) {
+                            if (!error) {
+                                addComment(_commentId, result);
+                                console.log(result);
+                            }
+                            else {
+                                console.log(error);
+                            }
+                        })
+                    }
+                    console.log(result);
+                }
+                else {
+                    console.log(error);
+                }
+            });
+        }
+
+        function addComment(_commentId, _content) {
+            commentIns._likes(_commentId, function (error, result) {
+                if (!error) {
+                    let _commentItem = '<li class="list-group-item" id="liComment' + _commentId + '"> ' +
+                        '<button type="button" class="btn btn-default" onclick="btnLikeClick(' + _commentId + ');">' +
+                        '<span class="glyphicon glyphicon-heart-empty"></span>' +
+                        '<span id="spLikeNumber' + _commentId + '">' + result + '</span>' +
+                        '</button>' +
+                        _content +
+                        '</li>';
+                    $("#ulComment").prepend(_commentItem);
+                    console.log(result);
+                }
+                else {
+                    console.log(error);
+                }
+            });
+        }
+
+        function updateLike(_commentId, _newNumber) {
+            let itemId = "#spLikeNumber" + _commentId;
+            $(itemId).text(_newNumber);
         }
 
 
