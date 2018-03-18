@@ -87,7 +87,9 @@
                 <li>
                   <a href="#release" data-toggle="tab">发布新任务</a>
                 </li>
-
+                <li>
+                  <a href="#rule" data-toggle="tab">任务规则</a>
+                </li>
                 <!-- <li>
                   <a href="#myReleased" data-toggle="tab">我发布的任务</a>
                 </li>
@@ -156,6 +158,19 @@
                     </div>
                   </div>
                   <button class="btn btn-primary btn-block" id="btnRelease">提交</button>
+                </div>
+
+                <div class="tab-pane fade" id="rule">
+                  <ul class="h5">
+                    <li>发布任务的赏金必须 > 0,新发布的任务状态为“开放中”</li>
+                    <li>任务发布成功后，赏金将转移到平台</li>
+                    <li>“开放中”的任务可以由发布人取消，状态变更为"已取消"</li>
+                    <li>取消发布的任务，50%赏金退还给发布人</li>
+                    <li>任务不能由发布账户本人承接 </li>
+                    <li>其他账户接受任务后，任务状态变更为"进行中"</li>
+                    <li>"进行中"的任务可以由发布人确认完成，任务状态变更为"已完成"</li>
+                    <li>任务确认完成后，90%赏金发放给任务接受人</li>
+                  </ul>
                 </div>
 
               </div>
@@ -368,7 +383,7 @@
           if (_owner == web3.eth.defaultAccount) {
             txtOp = '<button type="button" class="btn btn-default btn-xs" ' +
               'onClick="btnFinishlClick(' + taskId + ')">完成</button>'
-          } 
+          }
           break;
         case 2:
           txtStatus = '已取消';
