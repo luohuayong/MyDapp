@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>悬赏任务</title>
+
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="jumbotron">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="h4 text-center">TaskCoin概况</div>
+            </div>
+            <div class="panel-body">
+              <div class="form-group">
+                <label for="">名称(name)：</label>
+                <span id="name"></span>
+              </div>
+              <div class="form-group">
+                <label for="">标识符(symbol)：</label>
+                <span id="symbol"></span>
+              </div>
+              <div class="form-group">
+                <label for="">总额(totalSupply)：</label>
+                <span id="totalSupply"></span>
+              </div>
+              <div class="form-group">
+                <label for="">TaskCoin合约地址：</label>
+                <span id="tokenAddress"></span>
+              </div>
+              <div class="form-group">
+                <label for="">TaskManager合约地址：</label>
+                <span id="taskManagerAddress"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="h4 text-center">账户信息</div>
+            </div>
+            <div class="panel-body">
+              <div class="form-group">
+                <label for="">当前帐户(account)：</label>
+                <span id="account"></span>
+              </div>
+              <div class="form-group">
+                <label for="">余额(balanceOf)：</label>
+                <span id="balanceOf"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="h4 text-center">任务</div>
+            </div>
+            <div class="panel-body">
+
+              <ul id="myTab" class="nav nav-tabs">
+                <li class="active">
+                  <a href="#allTask" data-toggle="tab">
+                    任务列表
+                  </a>
+                </li>
+                <li>
+                  <a href="#release" data-toggle="tab">发布新任务</a>
+                </li>
+
+                <!-- <li>
+                  <a href="#myReleased" data-toggle="tab">我发布的任务</a>
+                </li>
+                <li>
+                  <a href="#myReceived" data-toggle="tab">我接受的任务</a>
+                </li> -->
+
+              </ul>
+              <div id="myTabContent" class="tab-content" style="padding-top:10px;">
+                <div class="tab-pane fade  in active" id="allTask">
+                  <table class="table table-striped table-hover">
+                    <thead>
+                      <tr class="info">
+                        <td>发布人</td>
+                        <td>任务</td>
+                        <td>赏金</td>
+                        <td>状态</td>
+                        <td>操作</td>
+                        <td>接受人</td>
+                      </tr>
+                    </thead>
+                    <tbody id="allTaskBody">
+                      <tr>
+                        <td>0x132...27f6f</td>
+                        <td>买张火车票</td>
+                        <td>50</td>
+                        <td>开放中</td>
+                        <td>
+                          <button type="button" class="btn btn-default btn-xs" id="btnReceive">接受</button>
+                        </td>
+                        <td>0x132...27f6f</td>
+                      </tr>
+                      <tr>
+                        <td>0x132...27f6f</td>
+                        <td>陪吃饭</td>
+                        <td>80</td>
+                        <td>进行中</td>
+                        <td>
+                          <button type="button" class="btn btn-default btn-xs" id="btnCancel">取消</button>
+                        </td>
+                        <td>0x132...27f6f</td>
+                      </tr>
+                      <tr>
+                        <td>0x132...27f6f</td>
+                        <td>陪逛街</td>
+                        <td>100</td>
+                        <td>已完成</td>
+                        <td></td>
+                        <td>0x132...27f6f</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="tab-pane fade" id="release">
+                  <div class="form-group">
+                    <div class="input-group">
+                      <span class="input-group-addon">内容(content)：</span>
+                      <input type="text" class="form-control" id="content">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="input-group">
+                      <span class="input-group-addon">赏金(bounty)：</span>
+                      <input type="text" class="form-control" id="bounty">
+                    </div>
+                  </div>
+                  <button class="btn btn-primary btn-block" id="btnRelease">提交</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+
+  <script src="./js/web3.min.js"></script>
+
+  <script>
+    var web3;
+    var tokenIns;
+    var taskManagerIns;
+    $(document).ready(function () {
+      // 使用metamask访问节点
+      if (typeof web3 !== 'undefined') {
+        console.log('Finded MetaMask')
+        web3 = new Web3(web3.currentProvider);
+      } else {
+        console.log('Not MetaMask')
+        web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+      }
+
+      var account = web3.eth.accounts[0];
+      web3.eth.defaultAccount = web3.eth.accounts[0];
+      var accountInterval = setInterval(function () {
+        if (web3.eth.accounts[0] !== account) {
+          account = web3.eth.accounts[0];
+          web3.eth.defaultAccount = web3.eth.accounts[0];
+          updateAccountInfo();
+          updateTaskInfo();
+        }
+      }, 1000);
+
+      startApp();
+      updateBaseInfo();
+      if (web3.eth.defaultAccount) {
+        updateAccountInfo();
+        updateTaskInfo();
+      }
+    });
+
+    function updateBaseInfo() {
+
+      tokenIns.name(function (error, result) {
+        if (!error)
+          $("#name").text(result);
+        else
+          console.log(error);
+      });
+
+      tokenIns.symbol(function (error, result) {
+        if (!error)
+          $("#symbol").text(result);
+        else
+          console.log(error);
+      });
+
+      tokenIns.totalSupply(function (error, result) {
+        if (!error)
+          $("#totalSupply").text(result);
+        else
+          console.log(error);
+      });
+
+      $("#tokenAddress").text(tokenIns.address);
+
+      $("#taskManagerAddress").text(taskManagerIns.address);
+
+    }
+
+    function updateAccountInfo() {
+      $("#account").text(web3.eth.defaultAccount);
+
+      tokenIns.balanceOf(web3.eth.defaultAccount, function (error, result) {
+        if (!error)
+          $("#balanceOf").text(result);
+        else
+          console.log(error);
+      });
+    }
+
+    function updateTaskInfo() {
+      $("#allTaskBody").empty();
+      taskManagerIns.taskCounter(function (error, result) {
+        if (!error) {
+          let _taskNumber = result.toNumber();
+          for (let i = 1; i <= _taskNumber; i++) {
+            addTaskItem(i);
+
+          }
+        } else {
+          console.log(error);
+        }
+      });
+    }
+
+    function startApp() {
+      var tokenAbi = [{ "constant": true, "inputs": [], "name": "name", "outputs": [{ "name": "", "type": "string" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_spender", "type": "address" }, { "name": "_value", "type": "uint256" }], "name": "approve", "outputs": [{ "name": "", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "totalSupply", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_from", "type": "address" }, { "name": "_to", "type": "address" }, { "name": "_value", "type": "uint256" }], "name": "transferFrom", "outputs": [{ "name": "", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "INITIAL_SUPPLY", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "decimals", "outputs": [{ "name": "", "type": "uint8" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_spender", "type": "address" }, { "name": "_subtractedValue", "type": "uint256" }], "name": "decreaseApproval", "outputs": [{ "name": "", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [{ "name": "_owner", "type": "address" }], "name": "balanceOf", "outputs": [{ "name": "balance", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "symbol", "outputs": [{ "name": "", "type": "string" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_to", "type": "address" }, { "name": "_value", "type": "uint256" }], "name": "transfer", "outputs": [{ "name": "", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [{ "name": "_spender", "type": "address" }, { "name": "_addedValue", "type": "uint256" }], "name": "increaseApproval", "outputs": [{ "name": "", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [{ "name": "_owner", "type": "address" }, { "name": "_spender", "type": "address" }], "name": "allowance", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "inputs": [], "payable": false, "stateMutability": "nonpayable", "type": "constructor" }, { "anonymous": false, "inputs": [{ "indexed": true, "name": "from", "type": "address" }, { "indexed": true, "name": "to", "type": "address" }, { "indexed": false, "name": "value", "type": "uint256" }], "name": "Transfer", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "name": "owner", "type": "address" }, { "indexed": true, "name": "spender", "type": "address" }, { "indexed": false, "name": "value", "type": "uint256" }], "name": "Approval", "type": "event" }];
+      var taskManagerAbi = [{ "constant": true, "inputs": [], "name": "myReleased", "outputs": [{ "name": "taskIds", "type": "uint256[]" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "", "type": "address" }, { "name": "", "type": "uint256" }], "name": "taskOwners", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "myReceived", "outputs": [{ "name": "taskIds", "type": "uint256[]" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "taskCounter", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_content", "type": "string" }, { "name": "_bounty", "type": "uint256" }], "name": "releaseTask", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [{ "name": "", "type": "address" }, { "name": "", "type": "uint256" }], "name": "taskWorkers", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_taskId", "type": "uint256" }], "name": "cancelTask", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [{ "name": "_taskId", "type": "uint256" }], "name": "finishTask", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [{ "name": "", "type": "uint256" }], "name": "tasks", "outputs": [{ "name": "content", "type": "string" }, { "name": "status", "type": "uint8" }, { "name": "bounty", "type": "uint256" }, { "name": "owner", "type": "address" }, { "name": "worker", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "owner", "outputs": [{ "name": "", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_taskId", "type": "uint256" }], "name": "receiveTask", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [{ "name": "newOwner", "type": "address" }], "name": "transferOwnership", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "token", "outputs": [{ "name": "", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }, { "inputs": [{ "name": "_token", "type": "address" }], "payable": false, "stateMutability": "nonpayable", "type": "constructor" }, { "anonymous": false, "inputs": [{ "indexed": false, "name": "taskId", "type": "uint256" }, { "indexed": false, "name": "owner", "type": "address" }, { "indexed": false, "name": "content", "type": "string" }, { "indexed": false, "name": "bounty", "type": "uint256" }], "name": "ReleaseTask", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": false, "name": "taskId", "type": "uint256" }, { "indexed": false, "name": "worker", "type": "address" }], "name": "ReceiveTask", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": false, "name": "taskId", "type": "uint256" }], "name": "CancelTask", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": false, "name": "taskId", "type": "uint256" }], "name": "FinishTask", "type": "event" }];
+      // Rinkeby合约地址
+      var tokenAddr = "0xd1164bef0f4f66eb687c4584c543c248d7c80df3";
+      var taskManagerAddr = "0x79d770df144d8c1ab712bd02ff7f7e5a09c5ebe0";
+      // 本地合约地址
+      // var tokenAddr = "0x13274fe19c0178208bcbee397af8167a7be27f6f";
+      // var taskManagerAddr = "0xb529f14aa8096f943177c09ca294ad66d2e08b1f";
+
+      tokenIns = web3.eth.contract(tokenAbi).at(tokenAddr);
+      taskManagerIns = web3.eth.contract(taskManagerAbi).at(taskManagerAddr);
+
+      $("#btnRelease").click(function () {
+        var _content = $("#content").val();
+        var _bounty = parseInt($("#bounty").val());
+        tokenIns.approve(taskManagerAddr, _bounty + 1, function (error, result) {
+          if (!error) {
+            tokenIns.Approval().watch(function (error, result) {
+              if (!error) {
+                taskManagerIns.releaseTask(_content, _bounty, { gas: 3000000 }, function (error, result) {
+                  if (!error) {
+
+                  } else {
+                    console.log(error);
+                  }
+                });
+              } else {
+                console.log(error);
+              }
+              tokenIns.Approval().stopWatching();
+            });
+          } else {
+            console.log(error);
+          }
+        });
+      });
+
+      let events = taskManagerIns.allEvents(function (err, result) {
+        if (!err) {
+          let taskId = result.args.taskId.toNumber();
+          switch (result.event) {
+            case "Transfer":
+              updateAccountInfo();
+              break;
+            case "ReleaseTask":
+              addTaskItem(taskId);
+              break;
+            case "ReceiveTask":
+              updateTaskItem(taskId);
+              break;
+            case "CancelTask":
+              updateTaskItem(taskId);
+              break;
+            case "FinishTask":
+              updateTaskItem(taskId);
+              break;
+          }
+        } else {
+          console.log(err);
+        }
+      });
+    }
+
+    function btnReceiveClick(_taskId) {
+      taskManagerIns.receiveTask(_taskId, function (error, result) {
+        if (error) {
+          console.log(error);
+        }
+      });
+    }
+
+    function btnCancelClick(_taskId) {
+      taskManagerIns.cancelTask(_taskId, function (error, result) {
+        if (error) {
+          console.log(error);
+        }
+      });
+    }
+
+    function btnFinishlClick(_taskId) {
+      taskManagerIns.finishTask(_taskId, function (error, result) {
+        if (error) {
+          console.log(error);
+        }
+      });
+    }
+
+    function createTaskItem(taskId, _content, _status, _bounty, _owner, _worker) {
+      let txtStatus = '';
+      let txtOp = '';
+      let txtTaskItem = '';
+
+      switch (_status) {
+        case 0:
+          txtStatus = '开放中';
+          if (_owner == web3.eth.defaultAccount) {
+            txtOp = '<button type="button" class="btn btn-default btn-xs" ' +
+              'onClick="btnCancelClick(' + taskId + ')">取消</button>'
+          } else {
+            txtOp = '<button type="button" class="btn btn-default btn-xs" ' +
+              'onClick="btnReceiveClick(' + taskId + ')">接受</button>'
+          }
+          break;
+        case 1:
+          txtStatus = '进行中';
+          if (_owner == web3.eth.defaultAccount) {
+            txtOp = '<button type="button" class="btn btn-default btn-xs" ' +
+              'onClick="btnFinishlClick(' + taskId + ')">完成</button>'
+          } 
+          break;
+        case 2:
+          txtStatus = '已取消';
+          break;
+        case 3:
+          txtStatus = '已完成';
+          break;
+      }
+
+      txtTaskItem = '<td><em>' + shortAddress(_owner) + '</em></td>' +
+        '<td>' + _content + '</td>' +
+        '<td>' + _bounty + '</td>' +
+        '<td>' + txtStatus + '</td>' +
+        '<td>' + txtOp + '</td>' +
+        '<td><em>' + shortAddress(_worker) + '</em></td>';
+      return txtTaskItem;
+    }
+
+    function addTaskItem(taskId) {
+      taskManagerIns.tasks(taskId, function (error, result) {
+        if (!error) {
+          let _content = result[0];
+          let _status = result[1].toNumber();
+          let _bounty = result[2].toNumber();
+          let _owner = result[3];
+          let _worker = result[4];
+
+          let taskItemText = createTaskItem(taskId, _content, _status, _bounty, _owner, _worker);
+          let taskItem = '<tr id="taskItem' + taskId + '">' + taskItemText + '</tr>';
+          $("#allTaskBody").prepend(taskItem);
+        } else {
+          console.log(error);
+        }
+      });
+    }
+
+    function updateTaskItem(taskId) {
+      taskManagerIns.tasks(taskId, function (error, result) {
+        if (!error) {
+          let _content = result[0];
+          let _status = result[1].toNumber();
+          let _bounty = result[2].toNumber();
+          let _owner = result[3];
+          let _worker = result[4];
+
+          let taskItemId = '#taskItem' + taskId;
+          let taskItemText = createTaskItem(taskId, _content, _status, _bounty, _owner, _worker);
+          $(taskItemId).html(taskItemText);
+        } else {
+          console.log(error);
+        }
+      });
+    }
+
+    function shortAddress(_address) {
+      return _address.substring(0, 5) + '...' + _address.substring(37, 42);
+    }
+
+  </script>
+</body>
+
+</html>

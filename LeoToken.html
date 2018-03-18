@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>tokenIns代币合约</title>
+
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="jumbotron">
+      <div class="row" style="padding-top:40px;">
+        <div class="col-xs-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="h3 text-center">概况</div>
+            </div>
+            <div class="panel-body">
+              <div class="form-group">
+                <label for="">名称(name)：</label>
+                <span id="name"></span>
+              </div>
+              <div class="form-group">
+                <label for="">标识符(symbol)：</label>
+                <span id="symbol"></span>
+              </div>
+              <div class="form-group">
+                <label for="">总额(totalSupply)：</label>
+                <span id="totalSupply"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="">众筹合约地址：</label>
+                <span id="crowdsaleAddress"></span>
+              </div>
+              <div class="form-group">
+                <label for="">Token合约地址：</label>
+                <span id="tokenAddress"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xs-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="h3 text-center">众筹</div>
+            </div>
+            <div class="panel-body">
+              <div class="form-group">
+                <label for="">已众筹(weiRaised)：</label>
+                <span id="weiRaised"></span>
+              </div>
+              <div class="form-group">
+                <label for="">兑换比例(rate)：</label>
+                <span id="rate"></span>
+              </div>
+              <div class="form-group">
+                <label for="">钱包地址(wallet)：</label>
+                <span id="wallet"></span>
+              </div>
+              <div class="form-group">
+                <div class="input-group" style="padding-top:10px;">
+                  <span class="input-group-addon">金额（Wei）</span>
+                  <input type="text" class="form-control" id="buyValue">
+                </div>
+              </div>
+
+              <button class="btn btn-primary btn-block" id="btnBuy">提交</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="padding-top:40px;">
+        <div class="col-xs-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="h3 text-center">交易</div>
+            </div>
+            <div class="panel-body">
+
+              <div class="form-group">
+                <label for="">当前帐户(account)：</label>
+                <span id="account"></span>
+              </div>
+              <div class="form-group">
+                <label for="">余额(balanceOf)：</label>
+                <span id="balanceOf"></span>
+              </div>
+              <div class="form-group">
+                <label for="">从当前账户转移(transfer)：</label>
+                <div class="input-group">
+                  <span class="input-group-addon">地址</span>
+                  <input class="form-control" id="toAccount">
+                </div>
+                <div class="input-group" style="padding-top:10px;">
+                  <span class="input-group-addon">金额</span>
+                  <input type="text" class="form-control" id="toValue">
+                </div>
+              </div>
+              <button class="btn btn-primary btn-block" id="btnTransfer">提交</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+
+  <script src="./js/web3.min.js"></script>
+
+  <script>
+    var web3;
+    var tokenIns;
+    var crowdsaleIns;
+    $(document).ready(function () {
+      // 使用metamask访问节点
+      if (typeof web3 !== 'undefined') {
+        console.log('Finded MetaMask')
+        web3 = new Web3(web3.currentProvider);
+      } else {
+        console.log('Not MetaMask')
+        web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+      }
+
+      var account = web3.eth.accounts[0];
+      web3.eth.defaultAccount = web3.eth.accounts[0];
+      var accountInterval = setInterval(function () {
+        if (web3.eth.accounts[0] !== account) {
+          account = web3.eth.accounts[0];
+          web3.eth.defaultAccount = web3.eth.accounts[0];
+          updateAccountInfo();
+        }
+      }, 100);
+
+      startApp();
+      updateBaseInfo();
+      updateAccountInfo();
+    });
+
+    function updateBaseInfo() {
+
+      tokenIns.name(function (error, result) {
+        if (!error)
+          $("#name").text(result);
+        else
+          console.log(error);
+      });
+
+      tokenIns.symbol(function (error, result) {
+        if (!error)
+          $("#symbol").text(result);
+        else
+          console.log(error);
+      });
+
+      tokenIns.totalSupply(function (error, result) {
+        if (!error)
+          $("#totalSupply").text(result);
+        else
+          console.log(error);
+      });
+
+      $("#tokenAddress").text(tokenIns.address);
+
+      $("#crowdsaleAddress").text(crowdsaleIns.address);
+
+      crowdsaleIns.rate(function (error, result) {
+        if (!error)
+          $("#rate").text(result);
+        else
+          console.log(error);
+      });
+
+      crowdsaleIns.wallet(function (error, result) {
+        if (!error)
+          $("#wallet").text(result);
+        else
+          console.log(error);
+      });
+
+      crowdsaleIns.weiRaised(function (error, result) {
+        if (!error)
+          $("#weiRaised").text(result);
+        else
+          console.log(error);
+      });
+
+    }
+
+    function updateAccountInfo() {
+      $("#account").text(web3.eth.defaultAccount);
+
+      tokenIns.balanceOf(web3.eth.defaultAccount, function (error, result) {
+        if (!error)
+          $("#balanceOf").text(result);
+        else
+          console.log(error);
+      });
+    }
+
+    function startApp() {
+      var tokenAbi = [{ "constant": true, "inputs": [], "name": "name", "outputs": [{ "name": "", "type": "string" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_spender", "type": "address" }, { "name": "_value", "type": "uint256" }], "name": "approve", "outputs": [{ "name": "", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "totalSupply", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_from", "type": "address" }, { "name": "_to", "type": "address" }, { "name": "_value", "type": "uint256" }], "name": "transferFrom", "outputs": [{ "name": "", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "INITIAL_SUPPLY", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "decimals", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_spender", "type": "address" }, { "name": "_subtractedValue", "type": "uint256" }], "name": "decreaseApproval", "outputs": [{ "name": "", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [{ "name": "_owner", "type": "address" }], "name": "balanceOf", "outputs": [{ "name": "balance", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "symbol", "outputs": [{ "name": "", "type": "string" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_to", "type": "address" }, { "name": "_value", "type": "uint256" }], "name": "transfer", "outputs": [{ "name": "", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [{ "name": "_spender", "type": "address" }, { "name": "_addedValue", "type": "uint256" }], "name": "increaseApproval", "outputs": [{ "name": "", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [{ "name": "_owner", "type": "address" }, { "name": "_spender", "type": "address" }], "name": "allowance", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "inputs": [], "payable": false, "stateMutability": "nonpayable", "type": "constructor" }, { "anonymous": false, "inputs": [{ "indexed": true, "name": "owner", "type": "address" }, { "indexed": true, "name": "spender", "type": "address" }, { "indexed": false, "name": "value", "type": "uint256" }], "name": "Approval", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "name": "from", "type": "address" }, { "indexed": true, "name": "to", "type": "address" }, { "indexed": false, "name": "value", "type": "uint256" }], "name": "Transfer", "type": "event" }];
+      var crowdsaleAbi = [{ "constant": true, "inputs": [], "name": "rate", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "weiRaised", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "wallet", "outputs": [{ "name": "", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_beneficiary", "type": "address" }], "name": "buyTokens", "outputs": [], "payable": true, "stateMutability": "payable", "type": "function" }, { "constant": true, "inputs": [], "name": "token", "outputs": [{ "name": "", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }, { "inputs": [{ "name": "_rate", "type": "uint256" }, { "name": "_wallet", "type": "address" }, { "name": "_token", "type": "address" }], "payable": false, "stateMutability": "nonpayable", "type": "constructor" }, { "payable": true, "stateMutability": "payable", "type": "fallback" }, { "anonymous": false, "inputs": [{ "indexed": true, "name": "purchaser", "type": "address" }, { "indexed": true, "name": "beneficiary", "type": "address" }, { "indexed": false, "name": "value", "type": "uint256" }, { "indexed": false, "name": "amount", "type": "uint256" }], "name": "TokenPurchase", "type": "event" }];
+      // Rinkeby合约地址
+      // var tokenAddr = "0xcfc644983c34a2c447641030f699f648d461df4c";
+      // var crowdsaleAddr = "";
+      // 本地合约地址
+      var tokenAddr = "0xf12b5dd4ead5f743c6baa640b0216200e89b60da";
+      var crowdsaleAddr = "0x345ca3e014aaf5dca488057592ee47305d9b3e10";
+
+      tokenIns = web3.eth.contract(tokenAbi).at(tokenAddr);
+      crowdsaleIns = web3.eth.contract(crowdsaleAbi).at(crowdsaleAddr);
+
+      $("#btnTransfer").click(function () {
+        var toAccount = $("#toAccount").val();
+        var toValue = $("#toValue").val();
+        tokenIns.transfer(toAccount, toValue, function (error, result) {
+          if (error) {
+            console.log(error);
+          }
+        });
+      });
+
+      $("#btnBuy").click(function () {
+        let _beneficiary = web3.eth.defaultAccount;
+        var buyValue = $("#buyValue").val();
+        crowdsaleIns.buyTokens(_beneficiary, { value: buyValue }, function (error, result) {
+          if (error) {
+            console.log(error);
+          }
+        });
+      });
+
+      let events = commentIns.allEvents(function (err, result) {
+        if (!err) {
+          switch (result.event) {
+            case "Transfer":
+              updateAccountInfo();
+              break;
+            case "TokenPurchase":
+              updateAccountInfo();
+              crowdsaleIns.weiRaised(function (error, result) {
+                if (!error)
+                  $("#weiRaised").text(result);
+                else
+                  console.log(error);
+              });
+              break;
+          }
+
+        } else {
+          console.log(err);
+        }
+      });
+
+
+    }
+
+
+  </script>
+</body>
+
+</html>
