@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>奖金任务</title>
+
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+</head>
+
+<body>
+
+  <div class="container">
+    <h1 class="text-center">奖金任务</h1>
+    <h2 class="text-left">
+      <small>基于星云链区块链实现的奖金任务。发布你的任务，并附上奖金，让别人帮你完成。或者帮助别人完成任务赚取奖金。</small>
+    </h2>
+
+
+    <div class="input-group form-group input-group-lg">
+      <input type="text" class="form-control" placeholder="请填写钱包地址，不是私钥" id="txtMyAddress">
+      <span class="input-group-btn">
+        <button class="btn btn-primary" type="button" onclick="btnMyAddressClick();" id="btnMyAddress">设置我的钱包地址</button>
+      </span>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <div class="h4 text-center">任务大厅</div>
+          </div>
+          <div class="panel-body">
+
+            <ul id="myTab" class="nav nav-tabs">
+              <li class="active">
+                <a href="#allTask" data-toggle="tab">
+                  任务列表
+                </a>
+              </li>
+              <li>
+                <a href="#release" data-toggle="tab">发布新任务</a>
+              </li>
+              <!-- <li>
+                <a href="#rule" data-toggle="tab">任务规则</a>
+              </li> -->
+              <!-- <li>
+                  <a href="#myReleased" data-toggle="tab">我发布的任务</a>
+                </li>
+                <li>
+                  <a href="#myReceived" data-toggle="tab">我接受的任务</a>
+                </li> -->
+
+            </ul>
+            <div id="myTabContent" class="tab-content" style="padding-top:10px;">
+              <div class="tab-pane fade  in active" id="allTask">
+                <table class="table table-striped table-hover">
+                  <thead>
+                    <tr class="info">
+                      <td>发布人</td>
+                      <td>任务</td>
+                      <td>赏金</td>
+                      <td>状态</td>
+                      <td>操作</td>
+                      <td>接受人</td>
+                    </tr>
+                  </thead>
+                  <tbody id="allTaskBody">
+                    <tr>
+                      <td>0x132...27f6f</td>
+                      <td>买张火车票</td>
+                      <td>50</td>
+                      <td>开放中</td>
+                      <td>
+                        <button type="button" class="btn btn-default btn-xs" id="btnReceive">接受</button>
+                      </td>
+                      <td>0x132...27f6f</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="tab-pane fade" id="release">
+
+
+
+                <div class="form-group">
+                  <label for="title">任务标题：</label>
+                  <input type="text" class="form-control" id="title" placeholder="在这里填写任务标题">
+                </div>
+
+                <div class="form-group">
+                  <label for="content">任务详情：</label>
+                  <textarea class="form-control" rows="5" id="content" placeholder="在这里填写任务的详细描述"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="group-reward">赏金：</label>
+                  <div class="input-group" id="group-reward">
+                    <input type="text" type="number" class="form-control" id="reward" placeholder="在这里填写任务的赏金以NAS为单位">
+                    <span class="input-group-addon">NAS</span>
+                  </div>
+                </div>
+
+                <div class="alert alert-info" role="alert">系统会另外加任务赏金*20%额度作为发布人押金,发布人押金在任务完成或者任务取消后全额退还</div>
+
+                <button class="btn btn-primary btn-block btn-lg" id="btnRelease" onclick="btnReleaseClick();">提交</button>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <div class="h4 text-center">合约规则</div>
+          </div>
+          <div class="panel-body">
+
+            <ul>
+              <li>发布任务的赏金必须 > 0,新发布的任务状态为“开放中”</li>
+              <li>发布任务时，除赏金之外，系统会另外加任务赏金*20%额度作为发布人押金。</li>
+              <li>任务发布成功后，赏金和发布人押金将转移到智能合约</li>
+              <li>“开放中”的任务可以由发布人取消，状态变更为"已取消"</li>
+              <li>取消发布的任务，将扣除少量系统佣金，剩余赏金和发布人押金退还给发布人</li>
+              <li>任务不能由发布账户本人承接 </li>
+              <li>接受任务时，系统会自动计算任务赏金*20%额度作为接受人押金</li>
+              <li>接受任务成功后，任务状态变更为"进行中"</li>
+              <li>"进行中"的任务可以由发布人确认完成，任务状态变更为"已完成"</li>
+              <li>任务确认完成后，任务奖金在扣除少量系统佣金后，发送至任务接受人账户</li>
+              <li>发布人押金和接受人押金全额退还至双方账户</li>
+            </ul>
+
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <div class="h4 text-center">常见问题</div>
+          </div>
+          <div class="panel-body">
+
+            <h4>合约地址在哪里？</h4>
+            <span id="dappAddress"></span>
+            <br>
+            <br>
+            <h4>系统佣金比例是多少？</h4>
+            10%
+            <br>
+            <br>
+            <h4>为什么任务发布人除了任务奖金外还需要支付发布人押金？</h4>
+            这是为了激励任务接受人在完成任务后，发布人能及时确认任务的完成状态。在任务完成后，发布人可以全额拿回自己的发布人押金。
+            <br>
+            <br>
+            <h4>为什么任务接受人还需要支付接受任务押金？</h4>
+            这是为了防止任务接受人随意接受自己无法完成的任务。当任务在“进行中”状态时，任务发布人是无法取消任务的。 在任务完成后，接受人除了任务赏金外，可以全额拿回自己的接受人押金。
+            <br>
+            <br>
+            <h4>如果任务接受人无法完成任务，双方协商同意取消任务，应该怎么操作？</h4>
+            为了保持流程的简洁，并未设置“进行中”任务的多分支处理。如果确实碰到这样的情况，我们建议再发起一个反向的任务。 即发布人和接受人互换角色再发起一个新的任务，两个任务确认完成后资金回到各自账户。当然这样会多支付一次系统佣金。
+            <br>
+            <br>
+            <h4>对于这个Dapp我有更好的想法？</h4>
+            对于区块链和基于区块链上的Dapp应用，我们不断探索智能合约能干什么，欢迎跟我们联系luohuayong@163.com
+            <br>
+            <br>
+            <h4>合约安全吗？</h4>
+            正如免责声明中指出的那样，在实验加密货币的过程中，可能会存在这样或者那样的漏洞。但是我们已经付出了相当大的努力来减轻风险。 建议您使用少量资金作为任务奖金。
+            <br>
+            <br>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <div class="h4 text-center">免责申明</div>
+          </div>
+          <div class="panel-body">
+            <h4>请注意，在任何情况下都不会有退款或赔偿，即使因为合同漏洞而让您损失了所有钱。</h4>
+            <h4>作者不承担所有合约在运行过程中出现的责任，您有责任在与合约交互之前考虑到其可能的行为，并同意接受本节中的条件。</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+  <script src="js/nebPay.js"></script>
+  <script src="js/nebulas.js"></script>
+  <script>
+    var myAddress;
+
+    var dappAddress = "n1ei8HaKJ5zTrwJGo2XLAjokJKUpQS56Hdv";
+
+    var nebulas = require("nebulas");
+    var Account = nebulas.Account;
+    var neb = new nebulas.Neb();
+    neb.setRequest(new nebulas.HttpRequest("https://mainnet.nebulas.io"));
+    var NebPay = require("nebpay");
+    var nebPay = new NebPay();
+
+    String.prototype.format = function () {
+      a = this;
+      for (k in arguments) {
+        a = a.replace("{" + k + "}", arguments[k])
+      }
+      return a
+    }
+
+    function getTasks() {
+      var from = Account.NewAccount().getAddressString();
+      var value = "0";
+      var nonce = "0"
+      var gas_price = "1000000"
+      var gas_limit = "2000000"
+      var callFunction = "tasks";
+      var callArgs = "";
+      var contract = {
+        "function": callFunction,
+        "args": callArgs
+      }
+
+      neb.api.call(from, dappAddress, value, nonce, gas_price, gas_limit, contract)
+        .then(function (resp) {
+          // console.dir(resp);
+          var result = resp.result;
+          if (result === 'null') {
+            alert("网络错误");
+          } else {
+            var obj = JSON.parse(JSON.parse(result));
+            var html = createTaskTable(obj.taskList);
+            $("#allTaskBody").empty();
+            $("#allTaskBody").prepend(html);
+          }
+        })
+        .catch(function (err) {
+          console.error(err);
+        });
+    }
+
+    function createTaskTable(taskList) {
+      var result = '';
+      for (var i in taskList) {
+        item = taskList[i];
+        var itemHtml = createTaskItem(item);
+        result = itemHtml + result;
+      }
+      return result;
+    }
+
+    function createTaskItem(task) {
+      var id = task.id;
+      var title = '<a href="#" data-toggle="tooltip" data-placement="right" title="'+ task.content + '">' + task.title + '</a>';
+      var status = task.status;
+      var reward = neb.fromBasic(task.reward).toString() + "NAS";
+      var deposit = neb.fromBasic(task.reward).mul(0.2).toString();
+      var owner = task.owner;
+      var worker = task.worker;
+
+      let txtStatus = '';
+      let txtOp = '';
+      let txtTaskItem = '';
+
+      switch (status) {
+        case 0:
+          txtStatus = '开放中';
+          if (owner === myAddress) {
+            txtOp = '<button type="button" class="btn btn-default btn-xs" ' +
+              'onClick="btnCancelClick(' + id + ')">取消</button>'
+          } else {
+            txtOp = '<button type="button" class="btn btn-default btn-xs" ' +
+              'onClick="btnReceiveClick(' + id + ',' + deposit + ')">接受</button>'
+          }
+          break;
+        case 1:
+          txtStatus = '进行中';
+          if (owner === myAddress) {
+            txtOp = '<button type="button" class="btn btn-default btn-xs" ' +
+              'onClick="btnCompleteClick(' + id + ')">完成</button>'
+          }
+          break;
+        case 2:
+          txtStatus = '已取消';
+          break;
+        case 3:
+          txtStatus = '已完成';
+          break;
+      }
+
+      txtTaskItem = '<tr><td><em>' + shortAddress(owner) + '</em></td>' +
+        '<td>' + title + '</td>' +
+        '<td>' + reward + '</td>' +
+        '<td>' + txtStatus + '</td>' +
+        '<td>' + txtOp + '</td>' +
+        '<td><em>' + shortAddress(worker) + '</em></td></tr>';
+      return txtTaskItem;
+    }
+
+    function btnMyAddressClick() {
+      myAddress = $("#txtMyAddress").val();
+      getTasks();
+    }
+
+    function btnReleaseClick() {
+      var title = $("#title").val();
+      var content = $("#content").val();
+      var reward = neb.toBasic($("#reward").val());
+      var to = dappAddress;
+      var value = neb.fromBasic(reward.mul(1.2)).toString();
+      var callFunction = "release";
+      var callArgs = '["{0}","{1}","{2}"]'.format(title, content, reward.toString()); // '[' + taskId + ']';
+
+      serialNumber = nebPay.call(to, value, callFunction, callArgs);
+    }
+
+    function btnReceiveClick(taskId, deposit) {
+      var to = dappAddress;
+      var value = deposit;
+      var callFunction = "receive";
+      var callArgs = '[' + taskId + ']';
+
+      serialNumber = nebPay.call(to, value, callFunction, callArgs);
+    }
+
+    function btnCancelClick(taskId) {
+      var to = dappAddress;
+      var value = "0";
+      var callFunction = "cancel";
+      var callArgs = '[' + taskId + ']';
+
+      serialNumber = nebPay.call(to, value, callFunction, callArgs);
+    }
+
+    function btnCompleteClick(taskId) {
+      var to = dappAddress;
+      var value = "0";
+      var callFunction = "complete";
+      var callArgs = '[' + taskId + ']';
+
+      serialNumber = nebPay.call(to, value, callFunction, callArgs);
+    }
+
+    function shortAddress(_address) {
+      var length = _address.length;
+      return _address.substring(0, 5) + '...' + _address.substring(length - 5, length);
+    }
+
+    function cbPush(resp) {
+      console.log("response of push: " + JSON.stringify(resp))
+    }
+
+    $(document).ready(function () {
+      if (typeof (webExtensionWallet) === "undefined") {
+        alert("请先安装星云钱包插件.");
+      }
+      getTasks();
+      $("#dappAddress").text(dappAddress);
+    });
+  </script>
+
+
+
+</body>
+
+</html>
